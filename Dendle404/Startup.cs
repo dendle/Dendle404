@@ -24,16 +24,36 @@ namespace Dendle404
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {         
-            
-            app.Map("", act => {
+        {
+            app.Map("/healthz", act =>
+            {
+                act.Use(HealthCheck);
+            });
+
+            app.Map("", act =>
+            {
                 act.Use(NotFound);
             });
+
+        }
+
+        private RequestDelegate HealthCheck(RequestDelegate arg)
+        {
+            return HealthAllGood;
+
+        }
+
+        private Task HealthAllGood(HttpContext context)
+        {
+            context.Response.StatusCode = 200;
+            context.Response.WriteAsync("(200) Healthy AF");
+
+            return Task.CompletedTask;
         }
 
         private RequestDelegate NotFound(RequestDelegate arg)
@@ -42,8 +62,9 @@ namespace Dendle404
         }
 
         private Task NotFoundDelegate(HttpContext context)
-        {            
-            context.Response.WriteAsync("Please go about your business");
+        {
+            context.Response.StatusCode = 404;
+            context.Response.WriteAsync("(404) Not Found");
 
             return Task.CompletedTask;
         }

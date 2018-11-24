@@ -1,0 +1,31 @@
+# Default values for dendle404.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+fullnameOverride: dendle404
+replicaCount: 1
+image:
+  repository: dendle404
+  tag: stable
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+service:
+  type: ClusterIP
+  port: 80
+
+probes:
+  enabled: false
+
+secrets: {}
+
+resources: 
+   limits:
+    cpu: 100m
+    memory: 128Mi
+   requests:
+    cpu: 100m
+    memory: 128Mi
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
